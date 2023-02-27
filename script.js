@@ -1,45 +1,30 @@
 let myLibrary = [];
 
-function CreateBook(title, author, pages, isread = false) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.isread = isread;
+function CreateBook(title, author, pages, isread = false, booknum) {
+  this.title = title;
+  this.author = author;
+  this.pages = pages;
+  this.isread = isread;
+  this.booknum = booknum;
 }
 
 function addBookToLibrary() {}
 
-const addBtn = document.querySelector(".add-book");
-const bookTitle = document.querySelector("#book-title");
-const bookAuthor = document.querySelector("#book-author");
-const bookPages = document.querySelector("#book-pages");
+const addBtn = document.querySelector('.add-book');
+const bookTitle = document.querySelector('#book-title');
+const bookAuthor = document.querySelector('#book-author');
+const bookPages = document.querySelector('#book-pages');
 const allRadios = document.querySelectorAll('input[name="read-status"]');
-const booksContainer = document.querySelector(".books-container");
+const booksContainer = document.querySelector('.books-container');
 
-addBtn.addEventListener("click", function (e) {
-    e.preventDefault();
+bookcounter = 0;
 
-    const curTitle = bookTitle.value;
-    const curAuthor = bookAuthor.value;
-    const curPages = bookPages.value;
-    const radioRead =
-        document.querySelector('input[name="read-status"]:checked').value ===
-        "read"
-            ? true
-            : false;
-    console.log(radioRead);
-
-    bookTitle.value = "";
-    bookAuthor.value = "";
-    bookPages.value = "";
-    Array.from(allRadios).map((radio) => (radio.checked = false));
-
-    myLibrary.push(new CreateBook(curTitle, curAuthor, curPages, radioRead));
-    booksContainer.innerHTML = "";
-    myLibrary.map((book) => {
-        booksContainer.insertAdjacentHTML(
-            "afterbegin",
-            `
+function renderBooks() {
+  myLibrary.map(book => {
+    if (!book.deleted) {
+      booksContainer.insertAdjacentHTML(
+        'afterbegin',
+        `
         <div class="book">
           <h2 class="book-title">
             <span class="cursive">Title: </span>${book.title}
@@ -48,12 +33,12 @@ addBtn.addEventListener("click", function (e) {
             <span class="cursive">Author: </span>${book.author}
           </h2>
           <h2 class="book-pages"><span class="cursive">Pages: </span>${
-              book.pages
+            book.pages
           }</h2>
           <h2 class="book-status">
-            <span class="cursive">Read status: </span>${
-                book.isread === true ? "Read" : "Not read yet"
-            }
+            <span class="cursive">Read status: </span><span class='current-status-${
+              book.booknum
+            }'>${book.isread === true ? 'Read' : 'Not read yet'}</span>
           </h2>
 
           <div class="book__controls">
@@ -61,6 +46,7 @@ addBtn.addEventListener("click", function (e) {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               class="finish__book"
+              data-finish='${book.booknum}'
           >
               <title>book-open-variant</title>
               <path
@@ -71,6 +57,7 @@ addBtn.addEventListener("click", function (e) {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               class="delete__book"
+              data-deleter='${book.booknum}'
           >
               <title>trash-can-outline</title>
               <path
@@ -80,6 +67,67 @@ addBtn.addEventListener("click", function (e) {
       </div>
         </div>
     `
-        );
-    });
+      );
+    }
+  });
+}
+
+function checkForEmpty(array) {
+  flag = false;
+  array.map(item => {
+    if (item === null || item === undefined || item === '') flag = true;
+  });
+  console.log(flag);
+  return flag;
+}
+
+booksContainer.addEventListener('click', function (e) {
+  if (e.target.tagName === 'svg' || e.target.tagName === 'path') {
+    if (e.target.closest('svg').dataset.deleter) {
+      const id = e.target.closest('svg').dataset.deleter;
+      myLibrary[id].deleted = true;
+      booksContainer.innerHTML = '';
+      renderBooks();
+    }
+
+    if (e.target.closest('svg').dataset.finish) {
+      const id = e.target.closest('svg').dataset.finish;
+      if (myLibrary[id].isread === true) {
+        myLibrary[e.target.closest('svg').dataset.finish].isread = false;
+        document.querySelector(`.current-status-${id}`).innerText =
+          'Not read yet';
+      } else if (myLibrary[id].isread === false) {
+        myLibrary[id].isread = true;
+        document.querySelector(`.current-status-${id}`).innerText = 'Read';
+      }
+    }
+  }
+});
+
+addBtn.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const curTitle = bookTitle.value;
+  const curAuthor = bookAuthor.value;
+  const curPages = bookPages.value;
+  const radioRead =
+    document.querySelector('input[name="read-status"]:checked')?.value ===
+    'read'
+      ? true
+      : false;
+
+  if (checkForEmpty([curTitle, curAuthor, curPages, radioRead])) return;
+
+  bookTitle.value = '';
+  bookAuthor.value = '';
+  bookPages.value = '';
+  Array.from(allRadios).map(radio => (radio.checked = false));
+
+  console.log(bookcounter);
+  myLibrary.push(
+    new CreateBook(curTitle, curAuthor, curPages, radioRead, bookcounter)
+  );
+  booksContainer.innerHTML = '';
+  renderBooks();
+  bookcounter++;
 });
