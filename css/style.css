@@ -100,6 +100,8 @@ body {
   grid-auto-rows: 30rem;
 
   grid-gap: 2rem;
+
+  justify-content: center;
 }
 
 .cursive {
