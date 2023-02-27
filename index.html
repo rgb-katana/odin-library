@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <script defer src="script.js"></script>
+    <title>Library</title>
+  </head>
+  <body>
+    <div class="library-container">
+      <h1 class="library-title">My cool library</h1>
+      <div class="library-control">
+        <form action="#" class="book-form">
+          <div class="form__input-box">
+            <input
+              type="text"
+              class="form__input"
+              id="book-title"
+              name="book-title"
+              required
+            />
+            <label for="book-title" class="form__label">Book title:</label>
+          </div>
+
+          <div class="form__input-box">
+            <input
+              type="text"
+              class="form__input"
+              id="book-author"
+              name="book-author"
+              required
+            />
+            <label for="book-author" class="form__label">Book author:</label>
+          </div>
+
+          <div class="form__input-box">
+            <input
+              type="text"
+              class="form__input"
+              id="book-pages"
+              name="book-pages"
+              required
+            />
+            <label for="book-pages" class="form__label">Book pages:</label>
+          </div>
+
+          <div class="form__input-box input__radio">
+            <input
+              name="read-status"
+              type="radio"
+              id="status-read"
+              value="read"
+              required="required"
+            />
+            <label for="status-read" class="radio-label">Read:</label>
+
+            <input
+              name="read-status"
+              type="radio"
+              id="status-not-read"
+              value="not-read"
+              required="required"
+            />
+            <label for="status-not-read" class="radio-label">Not read:</label>
+          </div>
+
+          <button class="add-book">add a book to library</button>
+        </form>
+      </div>
+      <div class="books-container">
+        <div class="book">
+          <h2 class="book-title">
+            <span class="cursive">Title: </span>The Hobbit
+          </h2>
+          <h2 class="book-authour">
+            <span class="cursive">Author: </span>J.R.R. Tolkien
+          </h2>
+          <h2 class="book-pages"><span class="cursive">Pages: </span>295</h2>
+          <h2 class="book-status">
+            <span class="cursive">Read status: </span>Not read yet
+          </h2>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
